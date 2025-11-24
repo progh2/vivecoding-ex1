@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from streamlit_option_menu import option_menu
-from extra_streamlit_components import TabBar, Tab, Card
+# from extra_streamlit_components import TabBar, Tab, Card  <-- 이 부분을 삭제합니다!
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.app_logo import add_logo
 from streamlit_extras.let_it_rain import rain
@@ -115,7 +115,7 @@ else:
         st.subheader(f"✨ 당신을 위한 멘트")
         st.markdown(f"> {info['ment']}")
         
-        # 간단한 통계 정보 카드 (extra-streamlit-components)
+        # 간단한 통계 정보
         st.subheader(f"📊 전 세계적 비율")
         
         # 해당 MBTI의 평균 비율 계산
@@ -169,6 +169,5 @@ with st.expander("🛠️ 사용된 라이브러리 목록"):
     - **`pandas`**: 데이터 처리 및 분석
     - **`plotly`**: 멋진 인터랙티브 데이터 시각화
     - **`streamlit-option-menu`**: 사이드바에 깔끔한 메뉴 구현
-    - **`extra-streamlit-components`**: 아이콘 및 카드 구성
     - **`streamlit-extras`**: 추가적인 UI/UX 개선 기능 (헤더, 이모지 비, 로고 등)
     """)
