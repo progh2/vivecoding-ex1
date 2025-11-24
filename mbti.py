@@ -9,7 +9,6 @@ st.set_page_config(
 )
 
 # --- 2. Semantic UI CDN 및 커스텀 CSS 주입 ---
-# Semantic UI CSS 파일을 CDN으로 불러오고, 스트림릿 기본 패딩 등을 조절합니다.
 st.markdown("""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
     <style>
@@ -28,10 +27,14 @@ st.markdown("""
 @st.cache_data
 def load_data():
     try:
+        # 파일이 존재하는지 확인하고 로드
         df = pd.read_csv("countriesMBTI_16types.csv")
         return df
     except FileNotFoundError:
-        st.error("CSV 파일을 찾을 수 없습니다.")
+        st.error("CSV 파일을 찾을 수 없습니다. 'countriesMBTI_16types.csv' 파일이 있는지 확인해주세요.")
+        return pd.DataFrame()
+    except Exception as e:
+        st.error(f"데이터 로드 중 오류가 발생했습니다: {e}")
         return pd.DataFrame()
 
 df = load_data()
@@ -58,7 +61,7 @@ mbti_info = {
 
 # --- 5. 화면 구성 (UI) ---
 
-# 5-1. 헤더 (Semantic UI Header)
+# 5-1. 헤더
 st.markdown("""
     <h2 class="ui center aligned icon header">
       <i class="circular globe icon"></i>
@@ -70,7 +73,7 @@ st.markdown("""
 
 # 5-2. 사용자 입력 (MBTI 선택)
 mbti_types = sorted(list(mbti_info.keys()))
-col1, col2, col3 = st.columns([1, 2, 1]) # 중앙 정렬을 위해 컬럼 분할
+col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
     selected_mbti = st.selectbox(
@@ -82,7 +85,7 @@ with col2:
 # --- 6. 로직 및 결과 표시 ---
 
 if selected_mbti == "선택해주세요":
-    # 초기 화면 안내 메시지 (Semantic UI Message)
+    # 초기 화면 안내 메시지
     st.markdown("""
         <div class="ui info message">
           <div class="header">
@@ -103,7 +106,7 @@ else:
         avg_value = sorted_df[selected_mbti].mean()
         top_10_df = sorted_df.head(10).set_index('Country')
 
-        # 6-1. 선택된 MBTI 설명 (Semantic UI Segment/Label)
+        # 6-1. 선택된 MBTI 설명
         st.markdown(f"""
             <div class="ui raised segment">
                 <a class="ui {color_theme} ribbon label">{selected_mbti}</a>
@@ -113,8 +116,7 @@ else:
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # 6-2. 주요 통계 보여주기 (Semantic UI Statistics)
-        # 스트림릿의 st.metric 대신 HTML로 직접 구현하여 디자인 적용
+        # 6-2. 주요 통계 보여주기
         st.markdown(f"""
             <div class="ui three statistics">
               <div class="statistic">
@@ -145,8 +147,7 @@ else:
             <br>
         """, unsafe_allow_html=True)
 
-        # 6-3. 맞춤형 멘트 (Semantic UI Icon Message)
-        # delta 계산
+        # 6-3. 맞춤형 멘트
         diff = top_value - avg_value
         
         st.markdown(f"""
@@ -163,15 +164,14 @@ else:
             </div>
         """, unsafe_allow_html=True)
 
-        # 6-4. 차트 (스트림릿 기본 차트 사용)
-        # 차트는 Canvas로 그려지므로 CSS 프레임워크 적용이 어려워 기본 기능 사용
+        # 6-4. 차트
         st.subheader(f"📊 {selected_mbti} 비율 상위 10개국")
         st.bar_chart(top_10_df, color="#FF4B4B")
 
-        # 6-5. 데이터 표 (Semantic UI Accordion 스타일 흉내)
+        # 6-5. 데이터 표 (에러 수정됨)
         with st.expander("📋 전체 데이터 목록 보기"):
-            # Pandas Styler로 약간의 스타일링
+            # .background_gradient(...) 제거하여 ImportError 방지
+            # 숫자 포맷팅만 적용
             st.dataframe(
                 sorted_df.style.format({selected_mbti: "{:.2%}"})
-                         .background_gradient(cmap="Blues", subset=[selected_mbti])
             )
