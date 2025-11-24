@@ -1,19 +1,26 @@
 import streamlit as st
 
 # 웹 앱의 제목 설정
-st.title("간단한 헬로 월드 Streamlit 앱") 
+st.title("✨ 인터랙티브 Streamlit 환영 앱") 
 
 # 1. 사용자 이름 입력 받기
-# st.text_input() 함수는 사용자로부터 텍스트를 입력받는 입력 필드를 생성합니다.
 user_name = st.text_input("당신의 이름을 입력해주세요:", "방문자")
 
-# 2. 메시지 생성 및 표시
-if user_name:
-    # f-string을 사용하여 입력받은 이름과 "헬로 월드" 메시지를 결합
-    greeting_message = f"**Hello World!** {user_name}님, Streamlit 앱에 오신 것을 환영합니다."
+# 2. '입력' 버튼 생성
+# st.button() 함수는 사용자가 클릭할 때 True를 반환합니다.
+if st.button("결과 보기 (입력)"):
+    # 버튼이 클릭되었을 때만 이 블록의 코드가 실행됩니다.
     
-    # st.write() 함수는 텍스트나 다른 Streamlit 요소를 표시합니다.
-    st.write(greeting_message)
-
-# 참고: st.success()나 st.info() 등을 사용하여 더 시각적인 메시지를 표시할 수도 있습니다.
-# st.success(f"성공적으로 환영 메시지를 표시했습니다: {user_name}")
+    # 3. 환영 메시지 생성
+    if user_name:
+        greeting_message = f"**Hello World!** {user_name}님, Streamlit 앱에 오신 것을 환영합니다."
+        
+        # 4. 애니메이션 효과 (축하 폭죽)
+        # st.balloons() 또는 st.snow()를 사용하여 재미있는 애니메이션을 추가할 수 있습니다.
+        st.balloons()
+        
+        # 5. 메시지 출력
+        st.success(greeting_message)
+    else:
+        # 이름이 비어 있을 경우 처리
+        st.warning("이름을 입력한 후 버튼을 눌러주세요.")
